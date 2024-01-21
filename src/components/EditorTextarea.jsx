@@ -28,11 +28,12 @@ const EditorTextarea = ({ socketRef, roomId }) => {
     let t;
     const init = () => {
       if (!socketRef.current || code === null) return;
-
-      socketRef.current.emit(ACTIONS.CODE_CHANGE, {
-        roomId,
-        code,
-      });
+      t = setTimeout(() => {
+        socketRef.current.emit(ACTIONS.CODE_CHANGE, {
+          roomId,
+          code,
+        });
+      }, 300)
     };
 
     init();
