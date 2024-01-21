@@ -17,7 +17,6 @@ const Editor = () => {
   const { roomId } = useParams();
   const location = useLocation();
   const socketRef = useRef(null);
-  const codeRef = useRef(null);
   const navigate = useNavigate();
   const setClients = useClientStore((state) => state.setClients);
   const removeClient = useClientStore((state) => state.removeClient);
@@ -74,9 +73,6 @@ const Editor = () => {
       <EditorTextarea
         socketRef={socketRef}
         roomId={roomId}
-        onCodeChange={(code) => {
-          codeRef.current = code;
-        }}
       />
 
       {/* gradient background */}
