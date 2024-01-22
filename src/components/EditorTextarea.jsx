@@ -9,6 +9,16 @@ import { ACTIONS } from "../../Actions";
 const EditorTextarea = ({ socketRef, roomId }) => {
   const [code, setCode] = useState(null);
   const [key, setKey] = useState(Date.now());
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    if (!socketRef.current || mounted) return;
+    socketRef.current.emit(ACTIONS.SYNC_CODE, {
+      roomId,
+      socketId: socketRef.current.id,
+    });
+    setMounted(true);
+  }, [socketRef.current]);
 
   useEffect(() => {
     const timer1 = setTimeout(() => {
@@ -27,7 +37,7 @@ const EditorTextarea = ({ socketRef, roomId }) => {
           roomId,
           code,
         });
-      }, 300);
+      }, 250);
     };
 
     init();
@@ -39,10 +49,6 @@ const EditorTextarea = ({ socketRef, roomId }) => {
 
   useEffect(() => {
     if (!socketRef.current) return;
-    socketRef.current.emit(ACTIONS.SYNC_CODE, {
-      roomId,
-      socketId: socketRef.current.id,
-    });
     socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
       if (code !== null) {
         console.log("code change");
