@@ -13,12 +13,6 @@ const EditorTextarea = ({ socketRef, roomId }) => {
   useEffect(() => {
     const timer1 = setTimeout(() => {
       setKey(Date.now());
-      if (socketRef.current) {
-        socketRef.current.emit(ACTIONS.SYNC_CODE, {
-          roomId,
-          socketId: socketRef.current.id,
-        });
-      }
     }, 500);
 
     return () => clearTimeout(timer1);
@@ -33,7 +27,7 @@ const EditorTextarea = ({ socketRef, roomId }) => {
           roomId,
           code,
         });
-      }, 300)
+      }, 300);
     };
 
     init();
@@ -45,6 +39,10 @@ const EditorTextarea = ({ socketRef, roomId }) => {
 
   useEffect(() => {
     if (!socketRef.current) return;
+    socketRef.current.emit(ACTIONS.SYNC_CODE, {
+      roomId,
+      socketId: socketRef.current.id,
+    });
     socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
       if (code !== null) {
         console.log("code change");
